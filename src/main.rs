@@ -175,6 +175,7 @@ fn main() {
         println!("pattern regex is: {:#?}", file_re)
     }
 
+    let is_skip_re_empty = skip_pattern.is_empty();
     let skip_re = Regex::new(format!(r"(?i){}$", skip_pattern).as_ref()).unwrap();
     if verbose {
         println!("filter regex is: {:#?}", skip_re)
@@ -184,7 +185,7 @@ fn main() {
             .into_iter()
             .filter_map(Result::ok)
             .filter(|e| e.file_type().is_file())
-            .filter_map(|e| if is_filename_a_match(&e, &skip_re) {None} else {Some(e)})
+            .filter_map(|e| if !is_skip_re_empty && is_filename_a_match(&e, &skip_re) {None} else {Some(e)})
             .filter_map(|e| if is_filename_a_match(&e, &file_re) {Some(e)} else {None})
             .collect();
 
