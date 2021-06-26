@@ -163,6 +163,14 @@ fn get_filename_grouping(files : &WalkDirEntryVec) -> FileNameGrouping {
 }
 
 //-------------------------------------------------------------------------------------------------
+fn is_hidden(entry: &walkdir::DirEntry) -> bool {
+    entry.file_name()
+         .to_str()
+         .map(|s| s.starts_with("."))
+         .unwrap_or(false)
+}
+
+//-------------------------------------------------------------------------------------------------
 fn main() {
 
     let args: Vec<String> = env::args().collect();
@@ -183,8 +191,8 @@ fn main() {
 
     let mut files : WalkDirEntryVec = WalkDir::new(dir2walk)
             .into_iter()
-            .filter_map(Result::ok)
-            .filter(|e| e.file_type().is_file())
+            .filter_map(|e| e.ok())
+            .filter(|e| e.file_type().is_file() && !is_hidden(e))
             .filter_map(|e| if !is_skip_re_empty && is_filename_a_match(&e, &skip_re) {None} else {Some(e)})
             .filter_map(|e| if is_filename_a_match(&e, &file_re) {Some(e)} else {None})
             .collect();
