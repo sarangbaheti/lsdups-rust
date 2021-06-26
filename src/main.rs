@@ -170,13 +170,13 @@ fn main() {
     
     let start = Instant::now();
 
-    let file_re = Regex::new(format!(r"(?i){}$", pattern).as_ref()).unwrap();
+    let file_re = Regex::new(format!(r"(?i){}", pattern).as_ref()).unwrap();
     if verbose {
         println!("pattern regex is: {:#?}", file_re)
     }
 
     let is_skip_re_empty = skip_pattern.is_empty();
-    let skip_re = Regex::new(format!(r"(?i){}$", skip_pattern).as_ref()).unwrap();
+    let skip_re = Regex::new(format!(r"(?i){}", skip_pattern).as_ref()).unwrap();
     if verbose {
         println!("filter regex is: {:#?}", skip_re)
     }
